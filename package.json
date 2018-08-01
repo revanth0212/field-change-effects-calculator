@@ -1,10 +1,13 @@
 {
   "name": "field-change-effects-calculator",
-  "version": "1.0.2",
-  "description": "Describe field-change-effects-calculator here",
+  "version": "1.0.3",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "files": ["es", "lib", "umd"],
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
   "scripts": {
     "build": "nwb build-web-module",
     "clean": "nwb clean-module",
@@ -28,7 +31,7 @@
     }
   },
   "author": "Revanth Kumar Annavarapu",
-  "homepage": "https://github.com/copartit/field-change-effects-calculator",
+  "homepage": "https://github.com/revanth0212/field-change-effects-calculator",
   "license": "MIT",
-  "repository": "https://github.com/copartit/field-change-effects-calculator.git"
+  "repository": "https://github.com/revanth0212/field-change-effects-calculator.git"
 }
