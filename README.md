@@ -8,7 +8,7 @@ It also has **infinite loop mitigation** logic built into it so even if there we
 
 # Example
 
-An example REPL has been created for the example, check it out [here](https://repl.it/@RevanthKumar2/FieldChangesCalculator).
+An REPL has been created and hosted to show the usage of this utility, check it out [here](https://repl.it/@RevanthKumar2/FieldChangesCalculator).
 
 # Usage
 
