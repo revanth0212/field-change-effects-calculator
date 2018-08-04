@@ -6,6 +6,10 @@ It does **multi level changes** at one shot. For instance if there is a rule say
 
 It also has **infinite loop mitigation** logic built into it so even if there were some misleading rules set, the algorithm will avoid such loops.
 
+# Example
+
+An example REPL has been created for the example, check it out [here](https://repl.it/@RevanthKumar2/FieldChangesCalculator).
+
 # Usage
 
 The npm module exposes a utility function that should be used to calculate the change effects.
