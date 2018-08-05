@@ -7,25 +7,19 @@ import Queue from './Queue'
 type FieldChangeObjectType = {
   name: string,
   path: Array<string>,
-  value: any,
-  editable: boolean,
-  readable: boolean,
-  required: boolean,
-  otherProps: { prop: any }
+  props: {
+    value: any
+  }
 }
 
 type FieldChangeEffectRuleType = {
   name: string,
   path: Array<string>,
-  value: (newValue: any, state: {}) => any,
-  editable: (newValue: any, state: {}) => boolean,
-  readable: (newValue: any, state: {}) => boolean,
-  required: (newValue: any, state: {}) => boolean,
-  otherProps: (
+  props: (
     newValue: any,
     state: {}
   ) => {
-    prop: any
+    value: any
   }
 }
 
@@ -33,21 +27,21 @@ const containsField = (fieldChanges: Array<FieldChangeObjectType>, fieldToFind: 
   (fieldChanges.filter(({ name }) => name === fieldToFind) || []).length > 0
 
 /**
- * 
+ *
  * COMPLEX FUNCTION. CONSIDER CAUTION WHILE MODIFYING.
- * 
+ *
  * This is a helper function that will used in queue iterations. This function hosts the
  * infinite loop breaking logic. When ever it calculates changes a certain field, it checks
  * inside the rules if changing that rule, will there be other fields that will have to be calcualted
  * and add them into the queue so they will be processed in next iterations.
- * 
- * @param { fieldName: Array<FieldChangeEffectRuleType> } FIELD_CHANGE_EFFECT_RULES 
- * @param queue 
+ *
+ * @param { fieldName: Array<FieldChangeEffectRuleType> } FIELD_CHANGE_EFFECT_RULES
+ * @param queue
  * @param {Array<FieldChangeObjectType>} fieldChanges
  * @param {string} changedFieldName
  * @param {any} newValue
  * @param state
- * 
+ *
  * @author Revanth Kumar
  */
 const calculateSingleFieldChanges = (
@@ -58,52 +52,50 @@ const calculateSingleFieldChanges = (
   const fieldsConfig: Array<FieldChangeEffectRuleType> = FIELD_CHANGE_EFFECT_RULES[changedFieldName]
   if (fieldsConfig) {
     return fieldsConfig
-      .map(({ name, path, value, editable, readable, required, otherProps }): FieldChangeObjectType => {
-        if (containsField(fieldChanges, name)) {
-          /**
-           * This mean the field change has already been calculated.
-           * Looks like an infinite loop. Dont execute this field change.
-           */
-          console.warn(
-            `Infinite loop found. ${changedFieldName} is about to change ${name} which has been changed due to other field. Not executing this field change effect to avoid inifinite loop.`
-          )
-          return null
-        } else {
-          const changes = {
-            name: name,
-            path: path,
-            value: value(newValue, state),
-            editable: editable(newValue, state),
-            readable: readable(newValue, state),
-            required: required(newValue, state),
-            otherProps: otherProps ? otherProps(newValue, state) : {}
-          }
-          if (FIELD_CHANGE_EFFECT_RULES[name]) {
+      .map(
+        ({ name, path, props }): FieldChangeObjectType => {
+          if (containsField(fieldChanges, name)) {
             /**
-             * This means, due to this field change, some other fields
-             * need to change. Hence add it into the queue.
-            */
-            queue.push({ name, newValue: changes.value })
+             * This mean the field change has already been calculated.
+             * Looks like an infinite loop. Dont execute this field change.
+             */
+            console.warn(
+              `Infinite loop found. ${changedFieldName} is about to change ${name} which has been changed due to other field. Not executing this field change effect to avoid inifinite loop.`
+            )
+            return null
+          } else {
+            const changes = {
+              name: name,
+              path: path,
+              props: props ? props(newValue, state) : {}
+            }
+            if (FIELD_CHANGE_EFFECT_RULES[name]) {
+              /**
+               * This means, due to this field change, some other fields
+               * need to change. Hence add it into the queue.
+               */
+              queue.push({ name, newValue: changes.props.value })
+            }
+            return changes
           }
-          return changes
         }
-      })
+      )
       .filter(fieldConfig => fieldConfig)
   }
   return []
 }
 
 /**
- * 
+ *
  * COMPLEX FUNCTION. CONSIDER CAUTION WHILE MODIFYING.
- * 
+ *
  * This function calculates all field change effects if @param {string} name is changed to @param {any} value.
  * It calculates all field changes even if they are n-level deep using a queue iteratively.
  * Rules are provided as a parameter. @param {Array<FieldChangeEffectRuleType>} FIELD_CHANGE_EFFECT_RULES.
  * The function also gets @param state which is the global state at that point of time.
- * @param {Array<string>} path will be used to fetch the field from the global state. 
+ * @param {Array<string>} path will be used to fetch the field from the global state.
  * It has logic built into it to avoid the execution of certain field change effects if an infinite loop has been detected.
- * 
+ *
  * @author Revanth Kumar
  */
 const calculateFieldChanges = (FIELD_CHANGE_EFFECT_RULES: {
@@ -127,11 +119,7 @@ const calculateFieldChanges = (FIELD_CHANGE_EFFECT_RULES: {
     {
       name,
       path: fieldPath,
-      value,
-      editable: pathOr(false, [...fieldPath, 'editable'], state),
-      readable: pathOr(false, [...fieldPath, 'readable'], state),
-      required: pathOr(false, [...fieldPath, 'required'], state),
-      otherProps: pathOr({}, [...fieldPath, 'otherProps'], state)
+      props: { ...pathOr({}, [...fieldPath, 'props'], state), value }
     }
   ]
   const singleFieldChangesCalculator = calculateSingleFieldChanges(FIELD_CHANGE_EFFECT_RULES, queue, fieldChanges)

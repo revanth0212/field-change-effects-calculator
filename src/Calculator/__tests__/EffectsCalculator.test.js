@@ -23,11 +23,9 @@ test('Testing if the there are no field change effects given, only that field ch
     {
       name: 'inspectedAt',
       path: ['fields', 'inspectedAt'],
-      value: 'Madrid',
-      editable: true,
-      readable: true,
-      required: false,
-      otherProps: {}
+      props: {
+        value: 'Madrid'
+      }
     }
   ])
 })
@@ -39,10 +37,12 @@ test('Testing if the there are no field change effects for the field, only that 
         {
           name: 'claimType',
           path: ['fields', 'claimType'],
-          value: (newValue, state) => newValue.toUpperCase(),
-          editable: (newValue, state) => false,
-          readable: (newValue, state) => true,
-          required: (newValue, state) => false
+          props: (newValue, state) => ({
+            value: newValue.toUpperCase(),
+            editable: false,
+            readable: true,
+            required: false
+          })
         }
       ]
     })(MOCK_STATE_DATA)('inspectedAt', ['fields', 'inspectedAt'], 'Madrid')
@@ -50,11 +50,9 @@ test('Testing if the there are no field change effects for the field, only that 
     {
       name: 'inspectedAt',
       path: ['fields', 'inspectedAt'],
-      value: 'Madrid',
-      editable: true,
-      readable: true,
-      required: false,
-      otherProps: {}
+      props: {
+        value: 'Madrid'
+      }
     }
   ])
 })
