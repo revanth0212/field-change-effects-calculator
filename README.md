@@ -2,7 +2,7 @@
 
 **field-change-effects-calculator** is a utility that will calculate all field changes for changes to a certain field.
 
-It does **multi level changes** at one shot. For instance if there is a rule saying if A changes B has to change and if B changes C has to change, all the calculations are done and returned by the utility function. 
+It does **multi level changes** at one shot. For instance if there is a rule saying if A changes B has to change and if B changes C has to change, all the calculations are done and returned by the utility function.
 
 It also has **infinite loop mitigation** logic built into it so even if there were some misleading rules set, the algorithm will avoid such loops.
 
@@ -16,20 +16,22 @@ The npm module exposes a utility function that should be used to calculate the c
 
     import fieldChangesCalculator from 'field-change-effects-calculator'
 
+    or
+
+    const fieldChangesCalculator = require('field-change-effects-calculator')
+
 Signature:
 
-    (rules: { fieldName: Array<FieldChangeEffectRuleType> }) => (state: Object) => (name: string, fieldPathInState: Array<string>, value: any): Array<FieldChangeObjectType>
+    (rules: { fieldName: Array<FieldChangeEffectRuleType> }) => (state: Object) => (nameOfTheField: string, fieldPathInState: Array<string>, newValue: any): Array<FieldChangeObjectType>
 
-The function when provided with rules, state object, field's name, path and new value, returns the state of fields that have changed as an Array of objects of type `FieldChangeObjectType`.
+The function when provided with rules, state object, field's name, path and new value, returns the changed state of the fields that have changed as an Array of objects of type `FieldChangeObjectType`.
 
     type  FieldChangeObjectType = {
-	    name: string,
-	    path: Array<string>,
-	    value: any,
-	    editable: boolean,
-	    readable: boolean,
-	    required: boolean,
-	    otherProps: { prop: any }
+        name: string,
+        path: Array<string>,
+        props: {
+        prop: any
+      }
     }
 
 More about rules in the future sections.
@@ -55,66 +57,51 @@ For instance if we have a rule saying `B's editability` has to change if `A's va
         {
           name: 'B',
           path: ['fields', 'B'],
-          value: (ANewValue, state) => state.fields.B.value,
-          editable: (ANewValue, state) => ANewValue === 'Hello' ? 'true' : 'false',
-          readable: (ANewValue, state) => state.fields.B.readable,
-          required: (ANewValue, state) => false,
-          otherProps: (ANewValue, state) => ({
-            placeholder: ANewValue.toLowerCase(),
-            label: ANewValue.toUpperCase()
-          })
+          props: (ANewValue, state) => {
+            editable: ANewValue === 'World' ? 'true' : 'false',
+          }
         }
       ]
     }
 
-If you want to write more complex rules like changing A changes B and C and changing B changes D, you can write it like this:
+If you want to write more complex rules like changing `A` changes `B` and `C` and changing `B` changes `D`, you can write it like this:
 
     var RULES = {
       A: [
         {
           name: 'B',
           path: ['fields', 'B'],
-          value: (ANewValue, state) => state.fields.B.value,
-          editable: (ANewValue, state) => ANewValue === 'Hello' ? 'true' : 'false',
-          readable: (ANewValue, state) => state.fields.B.readable,
-          required: (ANewValue, state) => false,
-          otherProps: (ANewValue, state) => ({
-            placeholder: ANewValue.toLowerCase(),
-            label: ANewValue.toUpperCase()
+          props: (ANewValue, state) => ({
+            editable: ANewValue === 'World' ? 'true' : 'false',
           })
         },
         {
           name: 'C',
           path: ['fields', 'C'],
-          value: (ANewValue, state) => ANewValue.toLowerCase(),
-          editable: (ANewValue, state) => true,
-          readable: (ANewValue, state) => state.fields.C.readable,
-          required: (ANewValue, state) => false
+          props: (ANewValue, state) => ({
+            value: ANewValue.toLowerCase()
+          })
         }
       ],
       B: [
         {
           name: 'D',
           path: ['fields', 'D'],
-          value: (BNewValue, state) => BNewValue.toLowerCase() + '*',
-          editable: (BNewValue, state) => true,
-          readable: (BNewValue, state) => state.fields.D.readable,
-          required: (ANewValue, state) => false
+          props: () => ({
+            value: BNewValue.toLowerCase() + '*',
+            editable: true,
+          })
         }
       ]
     }
 
 Each rule has the following properties:
 
-| Property Name | isRequired | Type | Description |
-|--|--|--|--|
-| name | true | `string` | Name of the field that will be used to uniquely identify the field. |
-| path | true | `Array<string>` | Path of the field where it resides in the state. |
-| value | true | `(newValue, state) => any` | Function that will be used to calculate new value for the field. |
-| editable | true | `(newValue, state) => boolean` | Function that will be used to calculate new editable value for the field. |
-| readable | true | `(newValue, state) => boolean` | Function that will be used to calculate new readable value for the field. |
-| required | true | `(newValue, state) => boolean` | Function that will be used to calculate new required value for the field. |
-| otherProps | false | `(newValue, state) => {}` | Function that will be used to calculate other props that do not change often like value, editable, readable etc, like label, placeholder, styles etc. |
+| Property Name | isRequired | Type                      | Description                                                               |
+| ------------- | ---------- | ------------------------- | ------------------------------------------------------------------------- |
+| name          | `true`     | `string`                  | Name of the field that will be used to uniquely identify the field.       |
+| path          | `true`     | `Array<string>`           | Path of the field where it resides in the state.                          |
+| props         | `true`     | `(newValue, state) => {}` | Function that will be used to calculate props/changed props of the field. |
 
 # Wanna Contribute?
 

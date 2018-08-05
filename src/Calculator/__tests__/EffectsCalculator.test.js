@@ -23,11 +23,9 @@ test('Testing if the there are no field change effects given, only that field ch
     {
       name: 'inspectedAt',
       path: ['fields', 'inspectedAt'],
-      value: 'Madrid',
-      editable: true,
-      readable: true,
-      required: false,
-      otherProps: {}
+      props: {
+        value: 'Madrid'
+      }
     }
   ])
 })
@@ -39,10 +37,12 @@ test('Testing if the there are no field change effects for the field, only that 
         {
           name: 'claimType',
           path: ['fields', 'claimType'],
-          value: (newValue, state) => newValue.toUpperCase(),
-          editable: (newValue, state) => false,
-          readable: (newValue, state) => true,
-          required: (newValue, state) => false
+          props: (newValue, state) => ({
+            value: newValue.toUpperCase(),
+            editable: false,
+            readable: true,
+            required: false
+          })
         }
       ]
     })(MOCK_STATE_DATA)('inspectedAt', ['fields', 'inspectedAt'], 'Madrid')
@@ -50,11 +50,9 @@ test('Testing if the there are no field change effects for the field, only that 
     {
       name: 'inspectedAt',
       path: ['fields', 'inspectedAt'],
-      value: 'Madrid',
-      editable: true,
-      readable: true,
-      required: false,
-      otherProps: {}
+      props: {
+        value: 'Madrid'
+      }
     }
   ])
 })
@@ -67,4 +65,23 @@ test('Testing if when an infinite loop inducing rules have been given, is the lo
       'Madrid'
     )
   ).toEqual(MOCK_RESULT_DATA)
+})
+
+test('Testing if a change is ommited from the rules object, respective prop is not changed.', () => {
+  const changes = calculateFieldChanges({
+    branch: [
+      {
+        name: 'claimType',
+        path: ['fields', 'claimType'],
+        props: (newValue, state) => ({
+          editable: false
+        })
+      }
+    ]
+  })(MOCK_STATE_DATA)('branch', ['fields', 'branch'], 'Madrid')
+  const { props: changedProps } = changes.filter(({ name }) => name === 'claimType')[0]
+  expect(changedProps.value).toBeUndefined()
+  expect(changedProps.required).toBeUndefined()
+  expect(changedProps.readable).toBeUndefined()
+  expect(changedProps.editable).toBeDefined()
 })

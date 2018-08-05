@@ -7,51 +7,59 @@ export const MOCK_INFINITE_LOOP_INDUCED_FIELD_CHANGE_EFFECTS = {
     {
       name: 'branch',
       path: ['fields', 'branch'],
-      value: (newValue, state) => newValue.toLowerCase(),
-      editable: (newValue, state) => true,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false,
-      otherProps: (newValue, state) => ({
+      props: (newValue, state) => ({
+        value: newValue.toLowerCase(),
+        editable: true,
+        readable: true,
+        required: false,
         placeholder: newValue === 'Madrid' ? 'Branch Name' : 'Branch'
       })
     },
     {
       name: 'sellerCode',
       path: ['fields', 'sellerCode'],
-      value: (newValue, state) => 'State Farm',
-      editable: (newValue, state) => false,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: 'State Farm',
+        editable: false,
+        readable: true,
+        required: false
+      })
     }
   ],
   branch: [
     {
       name: 'claimType',
       path: ['fields', 'claimType'],
-      value: (newValue, state) => newValue.toUpperCase(),
-      editable: (newValue, state) => false,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: newValue.toUpperCase(),
+        editable: false,
+        readable: true,
+        required: false
+      })
     }
   ],
   claimType: [
     {
       name: 'claim',
       path: ['fields', 'claim'],
-      value: (newValue, state) => '',
-      editable: (newValue, state) => true,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: '',
+        editable: true,
+        readable: true,
+        required: false
+      })
     }
   ],
   claim: [
     {
       name: 'inspectedAt',
       path: ['fields', 'inspectedAt'],
-      value: (newValue, state) => '',
-      editable: (newValue, state) => true,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: '',
+        editable: true,
+        readable: true,
+        required: false
+      })
     }
   ]
 }
@@ -61,41 +69,47 @@ export const MOCK_FIELD_CHANGE_EFFECTS = {
     {
       name: 'branch',
       path: ['fields', 'branch'],
-      value: (newValue, state) => newValue.toLowerCase(),
-      editable: (newValue, state) => true,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false,
-      otherProps: (newValue, state) => ({
+      props: (newValue, state) => ({
+        value: newValue.toLowerCase(),
+        editable: true,
+        readable: true,
+        required: false,
         placeholder: newValue === 'Madrid' ? 'Branch Name' : 'Branch'
       })
     },
     {
       name: 'sellerCode',
       path: ['fields', 'sellerCode'],
-      value: (newValue, state) => 'State Farm',
-      editable: (newValue, state) => false,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: 'State Farm',
+        editable: false,
+        readable: true,
+        required: false
+      })
     }
   ],
   branch: [
     {
       name: 'claimType',
       path: ['fields', 'claimType'],
-      value: (newValue, state) => newValue.toUpperCase(),
-      editable: (newValue, state) => false,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: newValue.toUpperCase(),
+        editable: false,
+        readable: true,
+        required: false
+      })
     }
   ],
   claimType: [
     {
       name: 'claim',
       path: ['fields', 'claim'],
-      value: (newValue, state) => '',
-      editable: (newValue, state) => true,
-      readable: (newValue, state) => true,
-      required: (newValue, state) => false
+      props: (newValue, state) => ({
+        value: '',
+        editable: true,
+        readable: true,
+        required: false
+      })
     }
   ]
 }
@@ -964,48 +978,49 @@ export const MOCK_RESULT_DATA = [
   {
     name: 'inspectedAt',
     path: ['fields', 'inspectedAt'],
-    value: 'Madrid',
-    editable: true,
-    readable: true,
-    required: false,
-    otherProps: {}
+    props: {
+      value: 'Madrid'
+    }
   },
   {
     name: 'branch',
     path: ['fields', 'branch'],
-    value: 'madrid',
-    editable: true,
-    readable: true,
-    required: false,
-    otherProps: {
+    props: {
+      value: 'madrid',
+      editable: true,
+      readable: true,
+      required: false,
       placeholder: 'Branch Name'
     }
   },
   {
     name: 'sellerCode',
     path: ['fields', 'sellerCode'],
-    value: 'State Farm',
-    editable: false,
-    readable: true,
-    required: false,
-    otherProps: {}
+    props: {
+      value: 'State Farm',
+      editable: false,
+      readable: true,
+      required: false
+    }
   },
   {
     name: 'claimType',
     path: ['fields', 'claimType'],
-    value: 'MADRID',
-    editable: false,
-    readable: true,
-    required: false,
-    otherProps: {}
+    props: {
+      value: 'MADRID',
+      editable: false,
+      readable: true,
+      required: false
+    }
   },
   {
     name: 'claim',
     path: ['fields', 'claim'],
-    value: '',
-    editable: true,
-    readable: true,
-    required: false,
-    otherProps: {}
+    props: {
+      value: '',
+      editable: true,
+      readable: true,
+      required: false
+    }
   }
 ]
