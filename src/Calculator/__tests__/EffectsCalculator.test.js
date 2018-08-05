@@ -66,3 +66,22 @@ test('Testing if when an infinite loop inducing rules have been given, is the lo
     )
   ).toEqual(MOCK_RESULT_DATA)
 })
+
+test('Testing if a change is ommited from the rules object, respective prop is not changed.', () => {
+  const changes = calculateFieldChanges({
+    branch: [
+      {
+        name: 'claimType',
+        path: ['fields', 'claimType'],
+        props: (newValue, state) => ({
+          editable: false
+        })
+      }
+    ]
+  })(MOCK_STATE_DATA)('branch', ['fields', 'branch'], 'Madrid')
+  const { props: changedProps } = changes.filter(({ name }) => name === 'claimType')[0]
+  expect(changedProps.value).toBeUndefined()
+  expect(changedProps.required).toBeUndefined()
+  expect(changedProps.readable).toBeUndefined()
+  expect(changedProps.editable).toBeDefined()
+})
