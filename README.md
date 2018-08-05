@@ -10,6 +10,8 @@ It also has **infinite loop mitigation** logic built into it so even if there we
 
 An REPL has been created and hosted to show the usage of this utility, check it out [here](https://repl.it/@RevanthKumar2/FieldChangesCalculator).
 
+Also check out this article on [medium](https://medium.com/@revanth0212/maintaining-form-field-interactions-is-tough-how-to-make-it-easy-792e5eeb9e58)
+
 # Usage
 
 The npm module exposes a utility function that should be used to calculate the change effects.
